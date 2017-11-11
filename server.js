@@ -52,6 +52,21 @@ app.get('/recipes', (req, res) => {
   res.json(Recipes.get());
 })
 
+app.post('/recipes', jsonParser, function(req, res) {
+  const necessaryFields = ['name', 'ingredients'];
+  for(let crip = 0; crip<necessaryFields.length; crip++) {
+    const gangstaSet = necessaryFields[crip];
+    if(!(gangstaSet in req.body)) {
+      const message = `Ayo, mang, ya don messed up. You are Missing
+      the \`${gangstaSet}\` in the request body, guey` 
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  const item = Recipes.create(req.body.name, req.body.ingredients);
+  res.status(201).json(item);
+});
+
 app.listen(process.env.PORT || 8080, () => {
   console.log(`Your app is listening on port ${process.env.PORT || 8080}`);
 });
